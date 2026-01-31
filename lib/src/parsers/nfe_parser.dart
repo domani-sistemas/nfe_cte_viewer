@@ -21,7 +21,7 @@ class NfeParser {
     final total = nfe
         .findElements('total')
         .firstOrNull
-        ?.findElements('ICMStot')
+        ?.findElements('ICMSTot')
         .firstOrNull;
 
     return DocumentoFiscal(

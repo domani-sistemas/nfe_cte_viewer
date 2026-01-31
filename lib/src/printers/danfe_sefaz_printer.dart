@@ -29,13 +29,15 @@ class DanfeSefazPrinter {
           pw.SizedBox(height: 2),
           _buildDestinatario(),
           pw.SizedBox(height: 2),
-          _buildFaturas(), // Ocupa pouco espaço geralmente
+          _buildFaturas(),
           pw.SizedBox(height: 2),
           _buildImpostos(),
           pw.SizedBox(height: 2),
           _buildTransporte(),
           pw.SizedBox(height: 2),
-          _buildItens(context),
+          pw.Row(children: [_label('DADOS DO PRODUTO / SERVIÇO')]),
+          _buildItensHeader(),
+          ...data.itens.map((item) => _buildItensRow(item)),
           pw.SizedBox(height: 2),
           _buildDadosAdicionais(),
         ],
@@ -933,68 +935,100 @@ class DanfeSefazPrinter {
     );
   }
 
-  pw.Widget _buildItens(pw.Context context) {
-    return pw.Column(
+  /// Célula da tabela de itens com borda e texto alinhado à esquerda
+  pw.Widget _cell(String text,
+      {bool bold = false, pw.TextAlign align = pw.TextAlign.left}) {
+    return pw.Container(
+      padding: const pw.EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.black, width: 0.5),
+      ),
+      child: pw.Text(
+        text,
+        style: bold ? _labelStyle : _valueStyle,
+        textAlign: align,
+      ),
+    );
+  }
+
+  /// Cabeçalho da tabela de itens (uma única linha com os títulos das colunas)
+  pw.Widget _buildItensHeader() {
+    return pw.Table(
+      border: pw.TableBorder.all(width: 0.5),
+      columnWidths: {
+        0: const pw.FixedColumnWidth(40),
+        1: const pw.FlexColumnWidth(2),
+        2: const pw.FixedColumnWidth(35),
+        3: const pw.FixedColumnWidth(25),
+        4: const pw.FixedColumnWidth(25),
+        5: const pw.FixedColumnWidth(20),
+        6: const pw.FixedColumnWidth(40),
+        7: const pw.FixedColumnWidth(40),
+        8: const pw.FixedColumnWidth(40),
+        9: const pw.FixedColumnWidth(40),
+        10: const pw.FixedColumnWidth(30),
+        11: const pw.FixedColumnWidth(30),
+        12: const pw.FixedColumnWidth(20),
+        13: const pw.FixedColumnWidth(20),
+      },
       children: [
-        pw.Row(children: [_label('DADOS DO PRODUTO / SERVIÇO')]),
-        pw.TableHelper.fromTextArray(
-          border: pw.TableBorder.all(width: 0.5),
-          headerStyle: _labelStyle,
-          cellStyle: _valueStyle,
-          headerDecoration: pw.BoxDecoration(color: PdfColors.white),
-          columnWidths: {
-            0: const pw.FixedColumnWidth(40), // CÓD
-            1: const pw.FlexColumnWidth(2), // DESCRIÇÃO
-            2: const pw.FixedColumnWidth(35), // NCM
-            3: const pw.FixedColumnWidth(25), // CFOP
-            4: const pw.FixedColumnWidth(25), // CST
-            5: const pw.FixedColumnWidth(20), // UN
-            6: const pw.FixedColumnWidth(40), // QTD
-            7: const pw.FixedColumnWidth(40), // VL UNIT
-            8: const pw.FixedColumnWidth(40), // VL TOTAL
-            9: const pw.FixedColumnWidth(40), // BC ICMS
-            10: const pw.FixedColumnWidth(30), // VL ICMS
-            11: const pw.FixedColumnWidth(30), // VL IPI
-            12: const pw.FixedColumnWidth(20), // % ICMS
-            13: const pw.FixedColumnWidth(20), // % IPI
-          },
-          headers: [
-            'CÓDIGO',
-            'DESCRIÇÃO DO PRODUTO / SERVIÇO',
-            'NCM/SH',
-            'CFOP',
-            'CST',
-            'UN',
-            'QTD.',
-            'V.UNIT',
-            'V.TOTAL',
-            'BC ICMS',
-            'V.ICMS',
-            'V.IPI',
-            '%ICMS',
-            '%IPI',
-          ],
-          data: data.itens
-              .map(
-                (i) => [
-                  i.codigo,
-                  i.descricao,
-                  i.ncm,
-                  i.cfop,
-                  i.cst,
-                  i.unidade,
-                  _format(i.quantidade),
-                  _format(i.valorUnitario),
-                  _format(i.valorTotal),
-                  _format(i.baseIcms),
-                  _format(i.valorIcms),
-                  _format(i.valorIpi),
-                  _format(i.aliqIcms),
-                  _format(i.aliqIpi),
-                ],
-              )
-              .toList(),
-        ),
+        pw.TableRow(children: [
+          _cell('CÓDIGO', bold: true),
+          _cell('DESCRIÇÃO DO PRODUTO / SERVIÇO', bold: true),
+          _cell('NCM/SH', bold: true),
+          _cell('CFOP', bold: true),
+          _cell('CST', bold: true),
+          _cell('UN', bold: true),
+          _cell('QTD.', bold: true),
+          _cell('V.UNIT', bold: true),
+          _cell('V.TOTAL', bold: true),
+          _cell('BC ICMS', bold: true),
+          _cell('V.ICMS', bold: true),
+          _cell('V.IPI', bold: true),
+          _cell('%ICMS', bold: true),
+          _cell('%IPI', bold: true),
+        ]),
+      ],
+    );
+  }
+
+  /// Uma linha individual de item — cada uma é um widget separado no MultiPage
+  pw.Widget _buildItensRow(dynamic item) {
+    return pw.Table(
+      border: pw.TableBorder.all(width: 0.5),
+      columnWidths: {
+        0: const pw.FixedColumnWidth(40),
+        1: const pw.FlexColumnWidth(2),
+        2: const pw.FixedColumnWidth(35),
+        3: const pw.FixedColumnWidth(25),
+        4: const pw.FixedColumnWidth(25),
+        5: const pw.FixedColumnWidth(20),
+        6: const pw.FixedColumnWidth(40),
+        7: const pw.FixedColumnWidth(40),
+        8: const pw.FixedColumnWidth(40),
+        9: const pw.FixedColumnWidth(40),
+        10: const pw.FixedColumnWidth(30),
+        11: const pw.FixedColumnWidth(30),
+        12: const pw.FixedColumnWidth(20),
+        13: const pw.FixedColumnWidth(20),
+      },
+      children: [
+        pw.TableRow(children: [
+          _cell(item.codigo),
+          _cell(item.descricao),
+          _cell(item.ncm),
+          _cell(item.cfop),
+          _cell(item.cst),
+          _cell(item.unidade),
+          _cell(_format(item.quantidade), align: pw.TextAlign.right),
+          _cell(_format(item.valorUnitario), align: pw.TextAlign.right),
+          _cell(_format(item.valorTotal), align: pw.TextAlign.right),
+          _cell(_format(item.baseIcms), align: pw.TextAlign.right),
+          _cell(_format(item.valorIcms), align: pw.TextAlign.right),
+          _cell(_format(item.valorIpi), align: pw.TextAlign.right),
+          _cell(_format(item.aliqIcms), align: pw.TextAlign.right),
+          _cell(_format(item.aliqIpi), align: pw.TextAlign.right),
+        ]),
       ],
     );
   }
