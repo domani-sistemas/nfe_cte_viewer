@@ -51,16 +51,16 @@ class DanfeSefazPrinter {
   // ============================
 
   static final _labelStyle = pw.TextStyle(
-    fontSize: 6,
+    fontSize: 5,
     fontWeight: pw.FontWeight.bold,
   );
-  static final _valueStyle = pw.TextStyle(fontSize: 7);
+  static final _valueStyle = pw.TextStyle(fontSize: 6.5);
   static final _titleStyle = pw.TextStyle(
     fontSize: 8,
     fontWeight: pw.FontWeight.bold,
   );
   static final _valueBoldStyle = pw.TextStyle(
-    fontSize: 7,
+    fontSize: 6.5,
     fontWeight: pw.FontWeight.bold,
   );
 
@@ -102,7 +102,7 @@ class DanfeSefazPrinter {
 
   pw.Widget _buildCanhoto() {
     return _box(
-      height: 45,
+      height: 40,
       child: pw.Row(
         children: [
           pw.Expanded(
@@ -175,7 +175,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 35,
               child: _box(
-                height: 100,
+                height: 90,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -196,32 +196,32 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 20,
               child: _box(
-                height: 100,
+                height: 90,
                 child: pw.Column(
                   mainAxisAlignment: pw.MainAxisAlignment.center,
                   children: [
                     pw.Text(
                       'DANFE',
                       style: pw.TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
                     pw.Text(
                       'Documento Auxiliar da',
-                      style: pw.TextStyle(fontSize: 6),
+                      style: pw.TextStyle(fontSize: 5),
                     ),
                     pw.Text(
                       'Nota Fiscal Eletrônica',
-                      style: pw.TextStyle(fontSize: 6),
+                      style: pw.TextStyle(fontSize: 5),
                     ),
                     pw.SizedBox(height: 4),
                     pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.center,
                       children: [
                         pw.Container(
-                          width: 15,
-                          height: 15,
+                          width: 14,
+                          height: 14,
                           decoration: pw.BoxDecoration(
                             border: pw.Border.all(width: 0.5),
                           ),
@@ -260,11 +260,11 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 45,
               child: _box(
-                height: 100,
+                height: 90,
                 child: pw.Column(
                   children: [
                     pw.Container(
-                      height: 40,
+                      height: 35,
                       child: pw.BarcodeWidget(
                         barcode: pw.Barcode.code128(),
                         data: data.chaveAcesso,
@@ -297,7 +297,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 55,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -310,7 +310,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 45,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -326,7 +326,7 @@ class DanfeSefazPrinter {
           children: [
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -338,7 +338,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -350,7 +350,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('CNPJ'), _value(data.emitente.cnpj)],
@@ -378,7 +378,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 70,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -391,7 +391,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 20,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -404,7 +404,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 10,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -421,7 +421,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 50,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -434,7 +434,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 30,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -447,7 +447,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 10,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [_label('CEP'), _value(data.destinatario.cep)],
@@ -457,7 +457,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 10,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -474,7 +474,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 40,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -487,7 +487,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 10,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [_label('UF'), _value(data.destinatario.uf)],
@@ -497,7 +497,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 10,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -510,7 +510,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 30,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -523,7 +523,7 @@ class DanfeSefazPrinter {
               pw.Expanded(
                 flex: 10,
                 child: _box(
-                  height: 25,
+                  height: 20,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [_label('HORA DA SAÍDA'), _value('00:00')],
@@ -557,7 +557,7 @@ class DanfeSefazPrinter {
           children: [
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -572,7 +572,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -587,7 +587,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -602,7 +602,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -617,7 +617,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -636,7 +636,7 @@ class DanfeSefazPrinter {
           children: [
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -651,7 +651,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -666,7 +666,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -681,7 +681,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -696,7 +696,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -711,7 +711,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -741,7 +741,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 70,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -754,7 +754,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 10,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -767,7 +767,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 10,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('CÓDIGO ANTT'), _value('-')],
@@ -777,7 +777,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 20,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -790,7 +790,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 10,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('UF'), _value(t.ufVeiculo)],
@@ -800,7 +800,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 20,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -817,7 +817,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 50,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -830,7 +830,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 30,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -843,7 +843,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 10,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('UF'), _value(t.transportadoraUf)],
@@ -853,7 +853,7 @@ class DanfeSefazPrinter {
             pw.Expanded(
               flex: 30,
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -869,7 +869,7 @@ class DanfeSefazPrinter {
           children: [
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('QUANTIDADE'), _value(t.quantidade)],
@@ -878,7 +878,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('ESPÉCIE'), _value(t.especie)],
@@ -887,7 +887,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('MARCA'), _value(t.marca)],
@@ -896,7 +896,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [_label('NUMERAÇÃO'), _value(t.numeracao)],
@@ -905,7 +905,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -917,7 +917,7 @@ class DanfeSefazPrinter {
             ),
             pw.Expanded(
               child: _box(
-                height: 25,
+                height: 20,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [

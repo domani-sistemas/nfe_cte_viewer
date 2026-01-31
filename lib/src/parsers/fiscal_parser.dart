@@ -9,8 +9,9 @@ class FiscalParser {
   static DocumentoFiscal parse(String xmlContent) {
     final document = XmlDocument.parse(xmlContent);
 
-    final isNfe = document.findAllElements('infNFe').isNotEmpty;
-    final isCte = document.findAllElements('infCte').isNotEmpty;
+    final root = document.rootElement;
+    final isNfe = root.name.local == 'nfeProc' || root.name.local == 'NFe';
+    final isCte = root.name.local == 'cteProc' || root.name.local == 'CTe';
 
     if (isNfe) {
       return NfeParser.parse(xmlContent);

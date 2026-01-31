@@ -23,8 +23,20 @@ class DacteMapper {
           doc.dataEmissao != null ? _dateFormat.format(doc.dataEmissao!) : '',
       modelo: s(doc.modelo),
       modalidadeFrete: 'Rodoviário',
-      tipoCte: doc.isCte ? '0 - Normal' : '1 - Complementar', // Simple mapping
-      tipoServico: '0 - Normal',
+      tipoCte: s(doc.tipoCte) == '0'
+          ? '0 - Normal'
+          : s(doc.tipoCte) == '1'
+              ? '1 - Complementar'
+              : s(doc.tipoCte) == '2'
+                  ? '2 - Substituto'
+                  : '3 - Anulação',
+      tipoServico: s(doc.tipoServico) == '0'
+          ? '0 - Normal'
+          : s(doc.tipoServico) == '1'
+              ? '1 - Subtransporte'
+              : s(doc.tipoServico) == '2'
+                  ? '2 - Redespacho'
+                  : '3 - Redespacho Interm.',
       tomadorServicoInfo: _mapTomadorInfo(doc),
       inicioPrestacao: s(doc.municipioInicio) + ' - ' + s(doc.ufInicio),
       fimPrestacao: s(doc.municipioFim) + ' - ' + s(doc.ufFim),

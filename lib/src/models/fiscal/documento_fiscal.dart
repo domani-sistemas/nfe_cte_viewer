@@ -61,6 +61,9 @@ class DocumentoFiscal {
   // Documentos (NF-e Relacionadas, etc)
   final List<DocumentoOriginarioCte> documentosOriginarios;
 
+  final String? tipoCte;
+  final String? tipoServico;
+
   final String? informacoesFisco;
   final String? informacoesComplementares;
 
@@ -110,7 +113,9 @@ class DocumentoFiscal {
     String? municipioDestino, // Alias para municipioFim
     String? ufDestino, // Alias para ufFim
     double? valorPrestacao, // Alias para valorTotalServico
-  })  : municipioInicio = municipioInicio ?? municipioOrigem,
+  })  : tipoCte = tipoCte,
+        tipoServico = tipoServico,
+        municipioInicio = municipioInicio ?? municipioOrigem,
         ufInicio = ufInicio ?? ufOrigem,
         municipioFim = municipioFim ?? municipioDestino,
         ufFim = ufFim ?? ufDestino,

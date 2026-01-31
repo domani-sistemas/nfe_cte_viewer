@@ -36,6 +36,8 @@ class CteParser {
       dataEmissao: DateTime.tryParse(_parseVal(ide, 'dhEmi') ?? ''),
       naturezaOperacao: _parseVal(ide, 'natOp'),
       protocoloAutorizacao: _parseProtocolo(document),
+      tipoCte: _parseVal(ide, 'tpCTe'),
+      tipoServico: _parseVal(ide, 'tpServ'),
       modal: _parseVal(ide, 'modal'),
       municipioInicio: _parseVal(ide, 'xMunIni'),
       ufInicio: _parseVal(ide, 'UFIni'),
