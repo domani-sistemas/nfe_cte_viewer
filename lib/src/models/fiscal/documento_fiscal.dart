@@ -15,6 +15,10 @@ class DocumentoFiscal {
   final String? protocoloAutorizacao;
   final bool saida;
 
+  bool get isNfce => modelo == '65';
+  bool get isNfe => modelo == '55';
+  final String? tipoAmbiente; // 1-Produção, 2-Homologação
+
   // Participantes Gerais
   final Participante? emitente;
   final Participante? destinatario;
@@ -67,6 +71,12 @@ class DocumentoFiscal {
   final String? informacoesFisco;
   final String? informacoesComplementares;
 
+  final List<PagamentoDocumento> pagamentos;
+
+  // NFC-e específico
+  final String? qrCode;
+  final String? urlConsulta;
+
   const DocumentoFiscal({
     this.chaveAcesso,
     this.modelo,
@@ -106,6 +116,10 @@ class DocumentoFiscal {
     this.documentosOriginarios = const [],
     this.informacoesFisco,
     this.informacoesComplementares,
+    this.pagamentos = const [],
+    this.qrCode,
+    this.urlConsulta,
+    this.tipoAmbiente,
     String? tipoCte, // Para compatibilidade
     String? tipoServico, // Para compatibilidade
     String? municipioOrigem, // Alias para municipioInicio
@@ -155,4 +169,11 @@ class DocumentoOriginarioCte {
     this.descricao,
     this.numero,
   });
+}
+
+class PagamentoDocumento {
+  final String forma; // tPag
+  final double valor; // vPag
+
+  const PagamentoDocumento({required this.forma, required this.valor});
 }

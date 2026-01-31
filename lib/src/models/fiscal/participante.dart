@@ -17,6 +17,8 @@ class Participante {
   final String? enderecoEmail;
   final String? enderecoPais;
 
+  String? get cnpjCpf => cnpj ?? cpf;
+
   const Participante({
     this.nome,
     this.nomeFantasia,

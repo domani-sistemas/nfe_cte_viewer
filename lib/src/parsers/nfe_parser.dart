@@ -23,6 +23,7 @@ class NfeParser {
         .firstOrNull
         ?.findElements('ICMSTot')
         .firstOrNull;
+    final supl = document.findAllElements('infNFeSupl').firstOrNull;
 
     return DocumentoFiscal(
       chaveAcesso: _parseChave(nfe),
@@ -45,6 +46,10 @@ class NfeParser {
       ),
       valorTotalProdutos: _doubleText(total, 'vProd'),
       valorTotalNota: _doubleText(total, 'vNF'),
+      tipoAmbiente: _parseVal(ide, 'tpAmb'),
+      qrCode: _parseVal(supl, 'qrCode'),
+      urlConsulta: _parseVal(supl, 'urlChave'),
+      pagamentos: _parsePagamentos(nfe.findElements('pag').firstOrNull),
       informacoesComplementares:
           _parseVal(nfe.findElements('infAdic').firstOrNull, 'infCpl'),
     );
@@ -139,5 +144,15 @@ class NfeParser {
   static double _doubleText(XmlElement? el, String tag) {
     final text = _parseVal(el, tag);
     return double.tryParse(text ?? '') ?? 0.0;
+  }
+
+  static List<PagamentoDocumento> _parsePagamentos(XmlElement? pag) {
+    if (pag == null) return const [];
+    return pag.findElements('detPag').map((det) {
+      return PagamentoDocumento(
+        forma: _parseVal(det, 'tPag') ?? '99',
+        valor: _doubleText(det, 'vPag'),
+      );
+    }).toList();
   }
 }
