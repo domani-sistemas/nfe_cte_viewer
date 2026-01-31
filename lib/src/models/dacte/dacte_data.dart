@@ -14,17 +14,17 @@ class ParticipanteDacte {
   final String pais;
 
   const ParticipanteDacte({
-    required this.nome,
-    required this.logradouro,
-    required this.numero,
-    required this.bairro,
-    required this.municipio,
-    required this.uf,
-    required this.cep,
-    required this.cnpjCpf,
-    required this.ie,
-    required this.fone,
-    required this.pais,
+    this.nome = '',
+    this.logradouro = '',
+    this.numero = '',
+    this.bairro = '',
+    this.municipio = '',
+    this.uf = '',
+    this.cep = '',
+    this.cnpjCpf = '',
+    this.ie = '',
+    this.fone = '',
+    this.pais = '',
   });
 
   String get enderecoCompleto => '$logradouro, $numero - $bairro';
@@ -43,9 +43,9 @@ class DocumentoOriginarioDacte {
   final String serieNro;
 
   const DocumentoOriginarioDacte({
-    required this.tipo,
-    required this.cnpjChave,
-    required this.serieNro,
+    this.tipo = '',
+    this.cnpjChave = '',
+    this.serieNro = '',
   });
 }
 

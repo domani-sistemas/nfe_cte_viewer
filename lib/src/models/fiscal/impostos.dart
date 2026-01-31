@@ -5,6 +5,7 @@ class Impostos {
   final double? vbcst;
   final double? vicmsst;
   final double? vipi;
+  final double? pcms;
   final double? vpis;
   final double? vcofins;
 
@@ -14,6 +15,7 @@ class Impostos {
     this.vbcst,
     this.vicmsst,
     this.vipi,
+    this.pcms,
     this.vpis,
     this.vcofins,
   });

@@ -15,6 +15,7 @@ class Participante {
   final String? enderecoCep;
   final String? enderecoTelefone;
   final String? enderecoEmail;
+  final String? enderecoPais;
 
   const Participante({
     this.nome,
@@ -32,5 +33,6 @@ class Participante {
     this.enderecoCep,
     this.enderecoTelefone,
     this.enderecoEmail,
+    this.enderecoPais,
   });
 }

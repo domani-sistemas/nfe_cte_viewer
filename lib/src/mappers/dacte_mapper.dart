@@ -10,6 +10,7 @@ class DacteMapper {
 
   static String s(String? v) => v ?? '';
   static double d(double? v) => v ?? 0.0;
+  static String f(double? v) => (v ?? 0.0).toStringAsFixed(2);
 
   static DacteData fromDomain(DocumentoFiscal doc) {
     return DacteData(
@@ -21,53 +22,65 @@ class DacteMapper {
       dataEmissao:
           doc.dataEmissao != null ? _dateFormat.format(doc.dataEmissao!) : '',
       modelo: s(doc.modelo),
-      modalidadeFrete: 'Rodoviário', // Fixo para este modal
-      tipoCte: s(doc.tipoCte),
-      tipoServico: s(doc.tipoServico),
+      modalidadeFrete: 'Rodoviário',
+      tipoCte: doc.isCte ? '0 - Normal' : '1 - Complementar', // Simple mapping
+      tipoServico: '0 - Normal',
       tomadorServicoInfo: _mapTomadorInfo(doc),
-      inicioPrestacao: s(doc.municipioOrigem) + ' - ' + s(doc.ufOrigem),
-      fimPrestacao: s(doc.municipioDestino) + ' - ' + s(doc.ufDestino),
-      emitente: _mapParticipante(doc.emitente)!,
+      inicioPrestacao: s(doc.municipioInicio) + ' - ' + s(doc.ufInicio),
+      fimPrestacao: s(doc.municipioFim) + ' - ' + s(doc.ufFim),
+      emitente:
+          _mapParticipante(doc.emitente) ?? const ParticipanteDacte(nome: ''),
       remetente: _mapParticipante(doc.remetente),
       destinatario: _mapParticipante(doc.destinatario),
       expedidor: _mapParticipante(doc.expedidor),
       recebedor: _mapParticipante(doc.recebedor),
       tomador: _mapParticipante(doc.tomador),
-      produtoPredominante: s(doc.transporte?.volEspecie),
-      outrasCaracteristicas: s(doc.transporte?.volMarca),
-      valorTotalCarga: d(doc.valorTotalProdutos),
-      pesoDeclarado: '${d(doc.transporte?.pesoBruto)} KG',
-      volumes: s(doc.transporte?.volQuantidade),
-      cubagem: '0.000',
-      qtde: '0',
-      componentes: [
-        ComponenteValorDacte(
-            nome: 'FRETE PESO',
-            valor: d(doc.transporte?.valorFrete).toStringAsFixed(2)),
-        // Pode adicionar mais se o modelo fiscal suportar
-      ],
-      valorTotalServico: d(doc.valorPrestacao),
+      produtoPredominante: s(doc.produtoPredominante),
+      outrasCaracteristicas: s(doc.outrasCaracteristicasCarga),
+      valorTotalCarga: d(doc.valorTotalCarga),
+      pesoDeclarado: _extractMedida(doc, 'PESO'),
+      volumes: _extractMedida(doc, 'VOLUME'),
+      cubagem: _extractMedida(doc, 'CUBAGEM'),
+      qtde: _extractMedida(doc, 'QTDE'),
+      componentes: doc.componentesValor
+          .map((c) => ComponenteValorDacte(
+                nome: c.nome,
+                valor: f(c.valor),
+              ))
+          .toList(),
+      valorTotalServico: d(doc.valorTotalServico),
       valorReceber: d(doc.valorReceber),
-      situacaoTributaria: '00 - ICMS normal', // Placeholder
+      situacaoTributaria: '00',
       baseIcms: d(doc.totaisImpostos?.vbc),
-      aliqIcms: 0.0,
+      aliqIcms: d(doc.totaisImpostos?.pcms),
       valorIcms: d(doc.totaisImpostos?.vicms),
       redBcIcms: 0.0,
       icmsSt: d(doc.totaisImpostos?.vicmsst),
-      documentosOriginarios: (doc.documentosOriginarios ?? [])
-          .map((key) => DocumentoOriginarioDacte(
-                tipo: 'NFE',
-                cnpjChave: key,
-                serieNro: '',
+      documentosOriginarios: doc.documentosOriginarios
+          .map((d) => DocumentoOriginarioDacte(
+                tipo: d.tipo,
+                cnpjChave: d.chave ?? d.numero ?? '',
+                serieNro: d.serieNro ?? '',
               ))
           .toList(),
       observacoes: s(doc.informacoesComplementares),
-      rntrc: s(doc.transporte?.veiculoRntrc),
-      ciot: s(doc.transporte?.ciot),
+      rntrc: s(doc.rntrc),
+      ciot: s(doc.ciot),
       dataPrevistaEntrega: doc.dataPrevistaEntrega != null
           ? _dateOnlyFormat.format(doc.dataPrevistaEntrega!)
           : '',
     );
+  }
+
+  static String _extractMedida(DocumentoFiscal doc, String search) {
+    try {
+      final m = doc.medidasCarga.firstWhere(
+        (m) => m.tipoMedida.toUpperCase().contains(search.toUpperCase()),
+      );
+      return m.quantidade.toString();
+    } catch (_) {
+      return '0';
+    }
   }
 
   static String _mapTomadorInfo(DocumentoFiscal doc) {
@@ -88,7 +101,7 @@ class DacteMapper {
       cnpjCpf: s(p.cnpj ?? p.cpf),
       ie: s(p.ie),
       fone: s(p.enderecoTelefone),
-      pais: 'BRASIL',
+      pais: s(p.enderecoPais ?? 'BRASIL'),
     );
   }
 }
