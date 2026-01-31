@@ -17,6 +17,7 @@ class Transporte {
   final double? pesoBruto;
   final double? valorFrete;
   final double? valorSeguro;
+  final String? ciot;
 
   const Transporte({
     this.modFrete,
@@ -36,5 +37,6 @@ class Transporte {
     this.pesoBruto,
     this.valorFrete,
     this.valorSeguro,
+    this.ciot,
   });
 }

@@ -36,6 +36,11 @@ class DocumentoFiscal {
   final double? valorPrestacao;
   final double? valorReceber;
 
+  final String? tipoCte;
+  final String? tipoServico;
+  final DateTime? dataPrevistaEntrega;
+  final List<String>? documentosOriginarios;
+
   final String? informacoesFisco;
   final String? informacoesComplementares;
 
@@ -65,6 +70,10 @@ class DocumentoFiscal {
     this.valorTotalNota,
     this.valorPrestacao,
     this.valorReceber,
+    this.tipoCte,
+    this.tipoServico,
+    this.dataPrevistaEntrega,
+    this.documentosOriginarios,
     this.informacoesFisco,
     this.informacoesComplementares,
   });

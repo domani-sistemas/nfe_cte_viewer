@@ -11,6 +11,7 @@ class ParticipanteDacte {
   final String cnpjCpf;
   final String ie;
   final String fone;
+  final String pais;
 
   const ParticipanteDacte({
     required this.nome,
@@ -23,25 +24,28 @@ class ParticipanteDacte {
     required this.cnpjCpf,
     required this.ie,
     required this.fone,
+    required this.pais,
   });
 
-  String get enderecoCompleto =>
-      '$logradouro, $numero - $bairro - $municipio/$uf';
+  String get enderecoCompleto => '$logradouro, $numero - $bairro';
 }
 
-class TotaisDacte {
-  final double valorTotalServico;
-  final double valorReceber;
-  final double baseIcms;
-  final double aliqIcms;
-  final double valorIcms;
+class ComponenteValorDacte {
+  final String nome;
+  final String valor;
 
-  const TotaisDacte({
-    required this.valorTotalServico,
-    required this.valorReceber,
-    required this.baseIcms,
-    required this.aliqIcms,
-    required this.valorIcms,
+  const ComponenteValorDacte({required this.nome, required this.valor});
+}
+
+class DocumentoOriginarioDacte {
+  final String tipo;
+  final String cnpjChave;
+  final String serieNro;
+
+  const DocumentoOriginarioDacte({
+    required this.tipo,
+    required this.cnpjChave,
+    required this.serieNro,
   });
 }
 
@@ -54,11 +58,12 @@ class DacteData {
   final String dataEmissao;
   final String modelo;
   final String modalidadeFrete;
+  final String tipoCte;
+  final String tipoServico;
+  final String tomadorServicoInfo;
 
-  final String municipioOrigem;
-  final String ufOrigem;
-  final String municipioDestino;
-  final String ufDestino;
+  final String inicioPrestacao;
+  final String fimPrestacao;
 
   final ParticipanteDacte emitente;
   final ParticipanteDacte? remetente;
@@ -69,12 +74,30 @@ class DacteData {
 
   final String produtoPredominante;
   final String outrasCaracteristicas;
-  final double pesoBruto;
-  final double pesoLiquido;
-  final double valorCarga;
+  final double valorTotalCarga;
 
-  final TotaisDacte totais;
-  final String informacoesComplementares;
+  final String pesoDeclarado;
+  final String volumes;
+  final String cubagem;
+  final String qtde;
+
+  final List<ComponenteValorDacte> componentes;
+  final double valorTotalServico;
+  final double valorReceber;
+
+  final String situacaoTributaria;
+  final double baseIcms;
+  final double aliqIcms;
+  final double valorIcms;
+  final double redBcIcms;
+  final double icmsSt;
+
+  final List<DocumentoOriginarioDacte> documentosOriginarios;
+  final String observacoes;
+
+  final String rntrc;
+  final String ciot;
+  final String dataPrevistaEntrega;
 
   const DacteData({
     required this.chaveAcesso,
@@ -85,10 +108,11 @@ class DacteData {
     required this.dataEmissao,
     required this.modelo,
     required this.modalidadeFrete,
-    required this.municipioOrigem,
-    required this.ufOrigem,
-    required this.municipioDestino,
-    required this.ufDestino,
+    required this.tipoCte,
+    required this.tipoServico,
+    required this.tomadorServicoInfo,
+    required this.inicioPrestacao,
+    required this.fimPrestacao,
     required this.emitente,
     this.remetente,
     this.destinatario,
@@ -97,10 +121,24 @@ class DacteData {
     this.tomador,
     required this.produtoPredominante,
     required this.outrasCaracteristicas,
-    required this.pesoBruto,
-    required this.pesoLiquido,
-    required this.valorCarga,
-    required this.totais,
-    required this.informacoesComplementares,
+    required this.valorTotalCarga,
+    required this.pesoDeclarado,
+    required this.volumes,
+    required this.cubagem,
+    required this.qtde,
+    required this.componentes,
+    required this.valorTotalServico,
+    required this.valorReceber,
+    required this.situacaoTributaria,
+    required this.baseIcms,
+    required this.aliqIcms,
+    required this.valorIcms,
+    required this.redBcIcms,
+    required this.icmsSt,
+    required this.documentosOriginarios,
+    required this.observacoes,
+    required this.rntrc,
+    required this.ciot,
+    required this.dataPrevistaEntrega,
   });
 }
