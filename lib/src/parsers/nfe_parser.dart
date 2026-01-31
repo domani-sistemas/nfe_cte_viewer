@@ -9,11 +9,20 @@ import '../models/fiscal/item_documento.dart';
 class NfeParser {
   static DocumentoFiscal parse(String xmlContent) {
     final document = XmlDocument.parse(xmlContent);
-    final nfe = document.findAllElements('infNFe').first;
-    final ide = nfe.findElements('ide').first;
-    final emit = nfe.findElements('emit').first;
-    final dest = nfe.findElements('dest').first;
-    final total = nfe.findElements('total').first.findElements('ICMStot').first;
+    final nfe = document.findAllElements('infNFe').firstOrNull;
+
+    if (nfe == null) {
+      throw Exception('Elemento <infNFe> não encontrado no XML.');
+    }
+
+    final ide = nfe.findElements('ide').firstOrNull;
+    final emit = nfe.findElements('emit').firstOrNull;
+    final dest = nfe.findElements('dest').firstOrNull;
+    final total = nfe
+        .findElements('total')
+        .firstOrNull
+        ?.findElements('ICMStot')
+        .firstOrNull;
 
     return DocumentoFiscal(
       chaveAcesso: _parseChave(nfe),
@@ -72,13 +81,13 @@ class NfeParser {
 
   static List<ItemDocumentoFiscal> _parseItens(XmlElement nfe) {
     return nfe.findElements('det').map((det) {
-      final prod = det.findElements('prod').first;
+      final prod = det.findElements('prod').firstOrNull;
       final imp = det
           .findElements('imposto')
-          .first
-          .findElements('ICMS')
-          .first
-          .descendants
+          .firstOrNull
+          ?.findElements('ICMS')
+          .firstOrNull
+          ?.descendants
           .whereType<XmlElement>()
           .firstOrNull;
 

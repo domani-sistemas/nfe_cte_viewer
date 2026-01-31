@@ -7,16 +7,21 @@ import '../models/fiscal/impostos.dart';
 class CteParser {
   static DocumentoFiscal parse(String xmlContent) {
     final document = XmlDocument.parse(xmlContent);
-    final cte = document.findAllElements('infCte').first;
-    final ide = cte.findElements('ide').first;
-    final emit = cte.findElements('emit').first;
-    final vPrest = cte.findElements('vPrest').first;
+    final cte = document.findAllElements('infCte').firstOrNull;
+
+    if (cte == null) {
+      throw Exception('Elemento <infCte> não encontrado no XML.');
+    }
+
+    final ide = cte.findElements('ide').firstOrNull;
+    final emit = cte.findElements('emit').firstOrNull;
+    final vPrest = cte.findElements('vPrest').firstOrNull;
     final imp = cte
         .findElements('imp')
-        .first
-        .findElements('ICMS')
-        .first
-        .descendants
+        .firstOrNull
+        ?.findElements('ICMS')
+        .firstOrNull
+        ?.descendants
         .whereType<XmlElement>()
         .firstOrNull;
     final infNorm = cte.findElements('infCTeNorm').firstOrNull;
@@ -111,7 +116,8 @@ class CteParser {
     );
   }
 
-  static Participante? _parseTomador(XmlElement cte, XmlElement ide) {
+  static Participante? _parseTomador(XmlElement cte, XmlElement? ide) {
+    if (ide == null) return null;
     final toma3 = ide.findElements('toma3').firstOrNull;
     if (toma3 != null) {
       final tomaCode = _parseVal(toma3, 'toma');
@@ -137,7 +143,8 @@ class CteParser {
     return null;
   }
 
-  static List<ComponenteValorCte> _parseComponentes(XmlElement vPrest) {
+  static List<ComponenteValorCte> _parseComponentes(XmlElement? vPrest) {
+    if (vPrest == null) return [];
     return vPrest
         .findElements('Comp')
         .map((c) => ComponenteValorCte(
