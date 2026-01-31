@@ -7,5 +7,8 @@ export 'src/models/fiscal/transporte.dart';
 export 'src/models/fiscal/impostos.dart';
 
 export 'src/models/danfe/danfe_data.dart';
+export 'src/models/dacte/dacte_data.dart';
 export 'src/mappers/danfe_mapper.dart';
+export 'src/mappers/dacte_mapper.dart';
 export 'src/printers/danfe_sefaz_printer.dart';
+export 'src/printers/dacte_sefaz_printer.dart';

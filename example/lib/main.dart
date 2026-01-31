@@ -13,34 +13,59 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Danfe Viewer Test',
+      title: 'Fiscal Viewer Test',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const DanfeViewerPage(),
+      home: const HomePage(),
     );
   }
 }
 
-class DanfeViewerPage extends StatelessWidget {
-  const DanfeViewerPage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('DANFE Preview')),
-      body: PdfPreview(
-        build: (format) => _generatePdf(),
-        canChangePageFormat: false,
-        canChangeOrientation: false,
-        canDebug: false,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Fiscal Viewer Preview'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'DANFE (NF-e)', icon: Icon(Icons.description)),
+              Tab(text: 'DACTE (CT-e)', icon: Icon(Icons.local_shipping)),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            FiscalPdfPreview(tipo: 'NFE'),
+            FiscalPdfPreview(tipo: 'CTE'),
+          ],
+        ),
       ),
     );
   }
+}
 
-  Future<Uint8List> _generatePdf() async {
-    // 1. Criar dados de exemplo (Domínio)
+class FiscalPdfPreview extends StatelessWidget {
+  final String tipo;
+  const FiscalPdfPreview({super.key, required this.tipo});
+
+  @override
+  Widget build(BuildContext context) {
+    return PdfPreview(
+      build: (format) => tipo == 'NFE' ? _generateDanfe() : _generateDacte(),
+      canChangePageFormat: false,
+      canChangeOrientation: false,
+      canDebug: false,
+    );
+  }
+
+  Future<Uint8List> _generateDanfe() async {
     final doc = DocumentoFiscal(
       chaveAcesso: '35231012345678000199550010000001231000001234',
       numero: '123',
@@ -48,7 +73,6 @@ class DanfeViewerPage extends StatelessWidget {
       naturezaOperacao: 'VENDA DE MERCADORIA',
       protocoloAutorizacao: '135230001234567',
       dataEmissao: DateTime.now(),
-      saida: true,
       emitente: const Participante(
         nome: 'EMPRESA TESTE LTDA',
         cnpj: '12.345.678/0001-99',
@@ -71,65 +95,88 @@ class DanfeViewerPage extends StatelessWidget {
         enderecoMunicipio: 'CURITIBA',
         enderecoUf: 'PR',
         enderecoCep: '80000-000',
-        enderecoTelefone: '(41) 8888-8888',
       ),
       itens: [
         ItemDocumentoFiscal(
           codigo: '001',
-          descricao: 'PRODUTO DE TESTE AUTOMATIZADO 1',
-          ncm: '12345678',
-          cfop: '5102',
-          cst: '000',
-          unidade: 'UN',
+          descricao: 'PRODUTO DE TESTE 1',
           quantidade: 10,
           valorUnitario: 50.0,
           valorTotal: 500.0,
-          impostos: const Impostos(vbc: 500.0, vicms: 90.0),
-        ),
-        ItemDocumentoFiscal(
-          codigo: '002',
-          descricao:
-              'PRODUTO DE TESTE AUTOMATIZADO 2 COM LONGAS DESCRICOES PARA TESTE DE QUEBRA DE LINHA NO PDF',
-          ncm: '87654321',
-          cfop: '5102',
-          cst: '000',
-          unidade: 'PC',
-          quantidade: 5,
-          valorUnitario: 100.0,
-          valorTotal: 500.0,
-          impostos: const Impostos(vbc: 500.0, vicms: 90.0),
         ),
       ],
       transporte: const Transporte(
         modFrete: '0',
-        transportadoraNome: 'TRANSPORTADORA VELOZ',
-        transportadoraCnpj: '11.111.111/0001-11',
+        transportadoraNome: 'TRANS VELOZ',
         veiculoPlaca: 'ABC-1234',
-        veiculoUf: 'SP',
-        volQuantidade: '15',
-        volEspecie: 'CAIXAS',
-        pesoBruto: 150.5,
-        pesoLiquido: 145.0,
         valorFrete: 50.0,
       ),
-      totaisImpostos: const Impostos(
-        vbc: 1000.0,
-        vicms: 180.0,
-        vbcst: 0.0,
-        vicmsst: 0.0,
-        vipi: 0.0,
-      ),
-      valorTotalProdutos: 1000.0,
-      valorTotalNota: 1050.0,
-      informacoesComplementares:
-          'DOCUMENTO GERADO PARA TESTES DO PACOTE NFE_CTE_VIEWER.',
+      valorTotalProdutos: 500.0,
+      valorTotalNota: 550.0,
     );
 
-    // 2. Mapear para DanfeData
-    final danfeData = DanfeMapper.fromDomain(doc);
+    return await DanfeSefazPrinter(DanfeMapper.fromDomain(doc)).generate();
+  }
 
-    // 3. Gerar PDF
-    final printer = DanfeSefazPrinter(danfeData);
-    return await printer.generate();
+  Future<Uint8List> _generateDacte() async {
+    final doc = DocumentoFiscal(
+      chaveAcesso: '35231012345678000199570010000004561000004567',
+      numero: '456',
+      serie: '1',
+      modelo: '57',
+      naturezaOperacao: 'PRESTACAO DE SERVICO DE TRANSPORTE',
+      protocoloAutorizacao: '135230007654321',
+      dataEmissao: DateTime.now(),
+      municipioOrigem: 'SAO PAULO',
+      ufOrigem: 'SP',
+      municipioDestino: 'RIO DE JANEIRO',
+      ufDestino: 'RJ',
+      emitente: const Participante(
+        nome: 'TRANSPORTADORA OFICIAL LTDA',
+        cnpj: '11.111.111/0001-11',
+        ie: '111222333',
+        enderecoLogradouro: 'RUA DA CARGA',
+        enderecoNumero: '500',
+        enderecoBairro: 'LOGISTICA',
+        enderecoMunicipio: 'SAO PAULO',
+        enderecoUf: 'SP',
+        enderecoCep: '05000-000',
+      ),
+      remetente: const Participante(
+        nome: 'FABRICA DE MOVEIS SA',
+        cnpj: '22.222.222/0001-22',
+        enderecoLogradouro: 'AV INDUSTRIAL',
+        enderecoNumero: '1000',
+        enderecoMunicipio: 'SAO PAULO',
+        enderecoUf: 'SP',
+      ),
+      destinatario: const Participante(
+        nome: 'LOJA DE DECORACAO LTDA',
+        cnpj: '33.333.333/0001-33',
+        enderecoLogradouro: 'RUA DO COMERCIO',
+        enderecoNumero: '50',
+        enderecoMunicipio: 'RIO DE JANEIRO',
+        enderecoUf: 'RJ',
+      ),
+      tomador: const Participante(
+        nome: 'FABRICA DE MOVEIS SA',
+        cnpj: '22.222.222/0001-22',
+        enderecoLogradouro: 'AV INDUSTRIAL',
+        enderecoNumero: '1000',
+        enderecoMunicipio: 'SAO PAULO',
+        enderecoUf: 'SP',
+      ),
+      transporte: const Transporte(
+        modFrete: '0',
+        volEspecie: 'MOVEIS',
+        pesoBruto: 1200.0,
+      ),
+      valorTotalProdutos: 15000.0, // Valor da carga
+      valorPrestacao: 850.0,
+      valorReceber: 850.0,
+      totaisImpostos: const Impostos(vbc: 850.0, vicms: 102.0),
+    );
+
+    return await DacteSefazPrinter(DacteMapper.fromDomain(doc)).generate();
   }
 }

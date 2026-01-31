@@ -17,12 +17,24 @@ class DocumentoFiscal {
 
   final Participante? emitente;
   final Participante? destinatario;
+  final Participante? remetente;
+  final Participante? expedidor;
+  final Participante? recebedor;
+  final Participante? tomador;
+
+  final String? municipioOrigem;
+  final String? ufOrigem;
+  final String? municipioDestino;
+  final String? ufDestino;
+
   final List<ItemDocumentoFiscal> itens;
 
   final Transporte? transporte;
   final Impostos? totaisImpostos;
   final double? valorTotalProdutos;
   final double? valorTotalNota;
+  final double? valorPrestacao;
+  final double? valorReceber;
 
   final String? informacoesFisco;
   final String? informacoesComplementares;
@@ -38,11 +50,21 @@ class DocumentoFiscal {
     this.saida = true,
     this.emitente,
     this.destinatario,
+    this.remetente,
+    this.expedidor,
+    this.recebedor,
+    this.tomador,
+    this.municipioOrigem,
+    this.ufOrigem,
+    this.municipioDestino,
+    this.ufDestino,
     this.itens = const [],
     this.transporte,
     this.totaisImpostos,
     this.valorTotalProdutos,
     this.valorTotalNota,
+    this.valorPrestacao,
+    this.valorReceber,
     this.informacoesFisco,
     this.informacoesComplementares,
   });
