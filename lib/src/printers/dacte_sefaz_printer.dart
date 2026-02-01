@@ -672,14 +672,18 @@ class DacteSefazPrinter {
                   children: [
                     _cell(children: [
                       _label('VALOR TOTAL DO SERVIÇO'),
-                      _value(_format(data.valorTotalServico),
-                          bold: true, align: pw.TextAlign.right)
+                      pw.Align(
+                          alignment: pw.Alignment.centerRight,
+                          child: _value(_format(data.valorTotalServico),
+                              bold: true, align: pw.TextAlign.right))
                     ]),
                     pw.Divider(height: 0, thickness: 0.5),
                     _cell(children: [
                       _label('VALOR A RECEBER'),
-                      _value(_format(data.valorReceber),
-                          bold: true, align: pw.TextAlign.right)
+                      pw.Align(
+                          alignment: pw.Alignment.centerRight,
+                          child: _value(_format(data.valorReceber),
+                              bold: true, align: pw.TextAlign.right))
                     ]),
                   ],
                 ),

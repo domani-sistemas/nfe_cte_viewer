@@ -1,36 +1,136 @@
-# nfe_cte_viewer
+# nfe_cte_viewer 🚀
 
-Um pacote Flutter poderoso e robusto para gerar PDFs de documentos fiscais brasileiros (NF-e e CT-e) em conformidade rigorosa com a SEFAZ. Focado em **paridade visual 1:1**, alta performance e facilidade de integração via XML ou modelos de dados.
+Um pacote Flutter de elite para geração de documentos fiscais brasileiros (NF-e, CT-e e NFC-e). Desenvolvido pela **Domani Sistemas** para oferecer fidelidade visual absoluta (Pixel Perfect) seguindo os manuais de integração da SEFAZ.
 
 [![Pub Version](https://img.shields.io/pub/v/nfe_cte_viewer)](https://pub.dev/packages/nfe_cte_viewer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 🚀 Funcionalidades Principais
+## � Diferenciais
 
-- **NF-e (DANFE)**: Representação fiel do Documento Auxiliar da Nota Fiscal Eletrônica.
-- **CT-e (DACTE)**: Representação fiel do Documento Auxiliar do Conhecimento de Transporte Eletrônico.
-- **Parsing de XML**: Processamento automático de arquivos `.xml` da SEFAZ com detecção inteligente de tipo.
-- **Pixel Perfect**: Layouts desenhados milimetricamente para coincidir com os padrões oficiais.
-- **Dual-Mode**: Gere PDFs a partir de arquivos XML ou diretamente de modelos de dados em memória.
-- **Multi-Página**: Suporte inteligente a quebra de página para tabelas longas de produtos.
-- **Pure Dart/Flutter**: Sem dependências nativas pesadas, rodando em Android, iOS, Web, Windows e macOS.
+- **Paridade SEFAZ**: Layouts que são cópias idênticas dos documentos oficiais.
+- **Inteligência de Parsing**: O `FiscalParser` detecta e processa NF-e, CT-e e NFC-e automaticamente.
+- **Performance Nativa**: 100% Dart, otimizado para lidar com centenas de itens sem travar a UI.
+- **Multi-Plataforma**: Android, iOS, Web, Windows e macOS.
+- **Suporte a NFC-e**: Geração de cupons fiscais com suporte a QR Code.
 
 ---
 
 ## 📦 Instalação
 
-Adicione `nfe_cte_viewer` ao seu `pubspec.yaml`:
+Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
   nfe_cte_viewer: ^0.1.0
-  printing: ^5.11.0 # Recomendado para visualização/impressão
+  printing: ^5.11.0 # Altamente recomendado para visualização e impressão
 ```
 
-### Configuração macOS (File Picker)
-Se estiver usando o seletor de arquivos no macOS, adicione as seguintes permissões ao seu `DebugProfile.entitlements` e `Release.entitlements`:
+---
+
+## 🛠 Guia de Uso Completo
+
+### 1. Processamento Automático via XML (O mais comum)
+
+Este exemplo demonstra como ler um XML, identificar o tipo de documento e gerar o PDF pronto para exibição ou impressão.
+
+```dart
+import 'package:nfe_cte_viewer/nfe_cte_viewer.dart';
+import 'dart:io';
+
+Future<void> handleFiscalDocument(String xmlPath) async {
+  // 1. Carrega o conteúdo do XML
+  final xmlContent = await File(xmlPath).readAsString();
+
+  // 2. Faz o parsing automático (identifica se é NF-e, CT-e ou NFC-e)
+  final doc = FiscalParser.parse(xmlContent);
+
+  // 3. Processa e gera o PDF baseado no tipo detectado
+  late final Uint8List pdfBytes;
+
+  if (doc.isCte) {
+    // Caso seja CT-e (Dacte)
+    final data = DacteMapper.fromDomain(doc);
+    pdfBytes = await DacteSefazPrinter(data).generate();
+  } else if (doc.isNfce) {
+    // Caso seja NFC-e (Cupom)
+    final data = NfceMapper.fromDomain(doc);
+    pdfBytes = await NfceSefazPrinter(data).generate();
+  } else {
+    // Caso seja NF-e (Danfe)
+    final data = DanfeMapper.fromDomain(doc);
+    pdfBytes = await DanfeSefazPrinter(data).generate();
+  }
+
+  // Agora você pode usar os pdfBytes para salvar ou exibir com o pacote 'printing'
+}
+```
+
+### 2. Criação Manual (Sem XML)
+
+Se você tem os dados em objetos e quer gerar o documento diretamente:
+
+```dart
+import 'package:nfe_cte_viewer/nfe_cte_viewer.dart';
+
+Future<Uint8List> generateManualDanfe() async {
+  final doc = DocumentoFiscal(
+    chaveAcesso: '35231012345678000199550010000001231000001234',
+    numero: '123',
+    serie: '1',
+    naturezaOperacao: 'VENDA DE MERCADORIA',
+    dataEmissao: DateTime.now(),
+    emitente: const Participante(
+      nome: 'SUA EMPRESA LTDA',
+      cnpj: '12.345.678/0001-99',
+      ie: '123456789',
+      enderecoLogradouro: 'RUA PRINCIPAL',
+      enderecoNumero: '100',
+      enderecoBairro: 'CENTRO',
+      enderecoMunicipio: 'SAO PAULO',
+      enderecoUf: 'SP',
+    ),
+    destinatario: const Participante(
+      nome: 'CLIENTE EXEMPLO',
+      cnpj: '98.765.432/0001-00',
+      enderecoLogradouro: 'AVENIDA SECUNDARIA',
+      enderecoMunicipio: 'CURITIBA',
+      enderecoUf: 'PR',
+    ),
+    itens: [
+      const ItemDocumentoFiscal(
+        codigo: '001',
+        descricao: 'PRODUTO DE TESTE',
+        quantidade: 1.0,
+        valorUnitario: 100.0,
+        valorTotal: 100.0,
+      ),
+    ],
+    valorTotalProdutos: 100.0,
+    valorTotalNota: 100.0,
+  );
+
+  final mapperData = DanfeMapper.fromDomain(doc);
+  return await DanfeSefazPrinter(mapperData).generate();
+}
+```
+
+---
+
+## 🧩 Componentes do Sistema
+
+| Componente | Responsabilidade |
+| :--- | :--- |
+| **`FiscalParser`** | Analisa o XML bruto e converte em um `DocumentoFiscal` agnóstico. |
+| **`Mappers`** | Transformam o `DocumentoFiscal` em dados específicos de cada layout (`DanfeData`, `DacteData`, `NfceData`). |
+| **`Printers`** | Motores de renderização em PDF. |
+
+---
+
+## 💻 Configuração para macOS
+
+Se a sua aplicação falhar ao abrir arquivos XML no macOS, certifique-se de adicionar as permissões de Sandbox em `DebugProfile.entitlements` e `Release.entitlements`:
 
 ```xml
 <key>com.apple.security.files.user-selected.read-only</key>
@@ -39,88 +139,31 @@ Se estiver usando o seletor de arquivos no macOS, adicione as seguintes permiss�
 
 ---
 
-## 🛠 Como Usar
+## 🌍 Exemplos Reais
 
-### 1. Via Arquivo XML (Recomendado)
-
-O pacote facilita a vida ao detectar automaticamente se o XML é uma NF-e ou um CT-e.
-
-```dart
-import 'package:nfe_cte_viewer/nfe_cte_viewer.dart';
-
-// Carregue a String do seu XML
-String xmlContent = await File('caminho_do_seu_xml.xml').readAsString();
-
-// O FiscalParser identifica e processa automaticamente
-final doc = FiscalParser.parse(xmlContent);
-
-// Gere o PDF adequado
-if (doc.isCte) {
-  final dacteData = DacteMapper.fromDomain(doc);
-  final printer = DacteSefazPrinter(dacteData);
-  final pdfBytes = await printer.generate();
-} else {
-  final danfeData = DanfeMapper.fromDomain(doc);
-  final printer = DanfeSefazPrinter(danfeData);
-  final pdfBytes = await printer.generate();
-}
-```
-
-### 2. Via Modelos de Dados (Manual)
-
-Útil quando você já possui os dados em objetos e não quer lidar com XML.
-
-```dart
-final doc = DocumentoFiscal(
-  chaveAcesso: '29251126935422000142550020001850531131148660',
-  numero: '185053',
-  serie: '2',
-  naturezaOperacao: 'VENDA DE MERCADORIA',
-  // ... outros campos
-);
-
-// Siga o fluxo de Printer como no exemplo acima
-```
+O diretório `example/` contém uma aplicação Flutter completa demonstrando:
+1. Dashboard de gerenciamento fiscal.
+2. Carregamento de arquivos XML via File Picker.
+3. Preview interativo de documentos.
+4. Geração de PDF em tempo real.
 
 ---
 
-## 📱 Exemplo Premium
+## 🤝 Contribuição e Suporte
 
-O pacote conta com um aplicativo de exemplo (`example/`) que demonstra:
-- **Dashboard Moderno**: Interface refinada com tema escuro e ícones intuitivos.
-- **File Picker**: Carregue seus próprios XMLs e veja o resultado instantaneamente.
-- **Preview Interativo**: Visualização em tempo real do PDF com zoom e scroll.
-- **Modo Offline**: Teste com amostras embutidas sem precisar de arquivos externos.
+Tem uma ideia ou encontrou um bug? 
+- Abra uma **Issue** explicando o caso.
+- Envie um **Pull Request** para melhorias.
 
-Para rodar:
-```bash
-cd example
-flutter run
-```
-
----
-
-## 🏗 Arquitetura
-
-O pacote é dividido em camadas claras:
-- **Models**: Estruturas de dados universais para NF-e/CT-e.
-- **Parsers**: Lógica robusta com tratamento defensivo para XMLs reais (tags ausentes ou opcionais).
-- **Mappers**: Conversores de domínios fiscais para estruturas de renderização.
-- **Printers**: Motores de geração de PDF baseados no oficial `pdf/widgets`.
-
----
-
-## 🤝 Contribuição
-
-Sinta-se à vontade para abrir Issues ou Pull Requests. Estamos focados em:
-1. Adicionar suporte a **NFC-e**.
-2. Suporte a **Eventos da Nota** (Cancelamento, Carta de Correção).
-3. Melhores validações de esquemas XML.
+Próximos passos do Roadmap:
+- [ ] Eventos (Cancelamento, Carta de Correção).
+- [ ] MDFe (Manifesto).
+- [ ] Impressão Térmica Direta (ESC/POS).
 
 ---
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a Licença MIT.
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
-Desenvolvido por [Domani Sistemas](https://github.com/domani-sistemas).
+Desenvolvido com ❤️ por [Domani Sistemas](https://github.com/domani-sistemas).
