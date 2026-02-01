@@ -1083,7 +1083,7 @@ class DanfeSefazPrinter {
     return pw.Container(
       alignment: pw.Alignment.centerRight,
       child: pw.Text(
-        'Impresso por nfe_cte_viewer - Página ${context.pageNumber} de ${context.pagesCount}',
+        'Gerado por nfe_cte_viewer - Página ${context.pageNumber} de ${context.pagesCount}',
         style: pw.TextStyle(fontSize: 5),
       ),
     );

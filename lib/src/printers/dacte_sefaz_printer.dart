@@ -448,11 +448,19 @@ class DacteSefazPrinter {
         children: [
           pw.Padding(
               padding: const pw.EdgeInsets.all(1),
-              child: pw.Row(children: [
-                _label(label),
-                pw.Spacer(),
-                _value(p?.nome ?? '', bold: true)
-              ])),
+              child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  children: [
+                    pw.Align(
+                        alignment: pw.Alignment.centerLeft,
+                        child: _label(label)),
+                    _value(
+                        p?.nome.substring(
+                                0, p.nome.length > 60 ? 60 : p.nome.length) ??
+                            '',
+                        bold: true,
+                        align: pw.TextAlign.center)
+                  ])),
           pw.Divider(height: 0, thickness: 0.5),
           _cell(children: [
             _label('ENDEREÇO'),
@@ -615,20 +623,45 @@ class DacteSefazPrinter {
               pw.Expanded(
                 flex: 8,
                 child: pw.Padding(
-                  padding: const pw.EdgeInsets.all(2),
-                  child: pw.Wrap(
-                    spacing: 10,
-                    runSpacing: 2,
-                    children: data.componentes
-                        .map((c) => pw.Container(
-                            width: 120,
-                            child: pw.Row(children: [
-                              _value(c.nome,
-                                  bold: true, align: pw.TextAlign.left),
-                              pw.Spacer(),
-                              _value(c.valor, align: pw.TextAlign.right)
-                            ])))
-                        .toList(),
+                  padding: const pw.EdgeInsets.all(0),
+                  child: pw.Table(
+                    border:
+                        pw.TableBorder.all(color: PdfColors.black, width: 0.5),
+                    columnWidths: {
+                      0: const pw.FlexColumnWidth(),
+                      1: const pw.FlexColumnWidth(),
+                      2: const pw.FlexColumnWidth(),
+                      3: const pw.FlexColumnWidth(),
+                    },
+                    children: [
+                      // Create rows of 4 components each
+                      ...List.generate((data.componentes.length / 4).ceil(),
+                          (rowIndex) {
+                        return pw.TableRow(
+                          children: List.generate(4, (colIndex) {
+                            final index = rowIndex * 4 + colIndex;
+                            if (index < data.componentes.length) {
+                              final c = data.componentes[index];
+                              return pw.Padding(
+                                padding: const pw.EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 1),
+                                child: pw.Row(children: [
+                                  pw.Text(c.nome,
+                                      style: pw.TextStyle(
+                                          fontSize: 6,
+                                          fontWeight: pw.FontWeight.bold)),
+                                  pw.Spacer(),
+                                  pw.Text(c.valor,
+                                      style: const pw.TextStyle(fontSize: 6)),
+                                ]),
+                              );
+                            } else {
+                              return pw.SizedBox();
+                            }
+                          }),
+                        );
+                      }),
+                    ],
                   ),
                 ),
               ),
@@ -789,6 +822,7 @@ class DacteSefazPrinter {
   pw.Widget _buildObservacoes() {
     return _box(
       height: 60,
+      width: double.infinity,
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
@@ -879,7 +913,7 @@ class DacteSefazPrinter {
           pw.Text(
               'Impresso em ${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())}',
               style: pw.TextStyle(fontSize: 4)),
-          pw.Text('Gerado em www.fsist.com.br',
+          pw.Text('Gerado por nfe_cte_viewer',
               style: pw.TextStyle(fontSize: 4)),
         ],
       ),
