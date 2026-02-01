@@ -11,17 +11,45 @@ class NfceSefazPrinter {
   static final _currencyFormat =
       NumberFormat.currency(locale: 'pt_BR', symbol: '');
 
-  NfceSefazPrinter(this.data);
+  final pw.Font? font;
+  final pw.Font? fontBold;
 
-  static final _fontNormal = pw.TextStyle(fontSize: 7);
-  static final _fontBold =
-      pw.TextStyle(fontSize: 7, fontWeight: pw.FontWeight.bold);
-  static final _fontTitle =
-      pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold);
-  static final _fontSmall = pw.TextStyle(fontSize: 6);
+  NfceSefazPrinter(this.data, {this.font, this.fontBold}) {
+    _fontNormal = pw.TextStyle(
+      fontSize: 7,
+      font: font,
+      fontBold: fontBold,
+    );
+    _fontBold = pw.TextStyle(
+      fontSize: 7,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+    _fontTitle = pw.TextStyle(
+      fontSize: 9,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+    _fontSmall = pw.TextStyle(
+      fontSize: 6,
+      font: font,
+      fontBold: fontBold,
+    );
+  }
+
+  late final pw.TextStyle _fontNormal;
+  late final pw.TextStyle _fontBold;
+  late final pw.TextStyle _fontTitle;
+  late final pw.TextStyle _fontSmall;
 
   Future<Uint8List> generate() async {
-    final pdf = pw.Document();
+    final pdf = pw.Document(
+      theme: (font != null || fontBold != null)
+          ? pw.ThemeData.withFont(base: font, bold: fontBold)
+          : null,
+    );
 
     pdf.addPage(
       pw.MultiPage(

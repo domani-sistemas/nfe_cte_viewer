@@ -363,26 +363,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _processXml(xml);
   }
 
-  void _processXml(String xml) {
+  Future<void> _processXml(String xml) async {
     try {
       final doc = FiscalParser.parse(xml);
+      final font = await PdfGoogleFonts.robotoRegular();
+      final fontBold = await PdfGoogleFonts.robotoBold();
+
       if (doc.isCte) {
         _showPdf(
           context,
           Future.value(
-            DacteSefazPrinter(DacteMapper.fromDomain(doc)).generate(),
+            DacteSefazPrinter(
+              DacteMapper.fromDomain(doc),
+              font: font,
+              fontBold: fontBold,
+            ).generate(),
           ),
         );
       } else if (doc.isNfce) {
         _showPdf(
           context,
-          Future.value(NfceSefazPrinter(NfceMapper.fromDomain(doc)).generate()),
+          Future.value(
+            NfceSefazPrinter(
+              NfceMapper.fromDomain(doc),
+              font: font,
+              fontBold: fontBold,
+            ).generate(),
+          ),
         );
       } else {
         _showPdf(
           context,
           Future.value(
-            DanfeSefazPrinter(DanfeMapper.fromDomain(doc)).generate(),
+            DanfeSefazPrinter(
+              DanfeMapper.fromDomain(doc),
+              font: font,
+              fontBold: fontBold,
+            ).generate(),
           ),
         );
       }
@@ -446,7 +463,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       valorTotalNota: 550.0,
     );
 
-    return await DanfeSefazPrinter(DanfeMapper.fromDomain(doc)).generate();
+    final font = await PdfGoogleFonts.robotoRegular();
+    final fontBold = await PdfGoogleFonts.robotoBold();
+
+    return await DanfeSefazPrinter(
+      DanfeMapper.fromDomain(doc),
+      font: font,
+      fontBold: fontBold,
+    ).generate();
   }
 
   Future<Uint8List> _generateDacteMemory() async {
@@ -529,7 +553,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           r'Lei Transparencia, Valor Aprox. Trib. R$300.00 EMPRESA OPTANTE PELO SIMPLES NACIONAL',
     );
 
-    return await DacteSefazPrinter(DacteMapper.fromDomain(doc)).generate();
+    final font = await PdfGoogleFonts.robotoRegular();
+    final fontBold = await PdfGoogleFonts.robotoBold();
+
+    return await DacteSefazPrinter(
+      DacteMapper.fromDomain(doc),
+      font: font,
+      fontBold: fontBold,
+    ).generate();
   }
 
   Future<Uint8List> _generateNfceMemory() async {
@@ -567,6 +598,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       valorTotalNota: 54.0,
     );
 
-    return await NfceSefazPrinter(NfceMapper.fromDomain(doc)).generate();
+    final font = await PdfGoogleFonts.robotoRegular();
+    final fontBold = await PdfGoogleFonts.robotoBold();
+
+    return await NfceSefazPrinter(
+      NfceMapper.fromDomain(doc),
+      font: font,
+      fontBold: fontBold,
+    ).generate();
   }
 }

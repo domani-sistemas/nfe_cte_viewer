@@ -13,10 +13,41 @@ class DacteSefazPrinter {
     locale: 'pt_BR',
   );
 
-  DacteSefazPrinter(this.data);
+  final pw.Font? font;
+  final pw.Font? fontBold;
+
+  DacteSefazPrinter(this.data, {this.font, this.fontBold}) {
+    _labelStyle = pw.TextStyle(
+      fontSize: 5,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+    _valueStyle = pw.TextStyle(
+      fontSize: 7,
+      font: font,
+      fontBold: fontBold,
+    );
+    _valueBoldStyle = pw.TextStyle(
+      fontSize: 7,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+    _titleStyle = pw.TextStyle(
+      fontSize: 9,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+  }
 
   Future<Uint8List> generate() async {
-    final pdf = pw.Document();
+    final pdf = pw.Document(
+      theme: (font != null || fontBold != null)
+          ? pw.ThemeData.withFont(base: font, bold: fontBold)
+          : null,
+    );
 
     pdf.addPage(
       pw.MultiPage(
@@ -64,13 +95,10 @@ class DacteSefazPrinter {
   }
 
   // Styles
-  static final _labelStyle =
-      pw.TextStyle(fontSize: 5, fontWeight: pw.FontWeight.bold);
-  static final _valueStyle = pw.TextStyle(fontSize: 7);
-  static final _valueBoldStyle =
-      pw.TextStyle(fontSize: 7, fontWeight: pw.FontWeight.bold);
-  static final _titleStyle =
-      pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold);
+  late final pw.TextStyle _labelStyle;
+  late final pw.TextStyle _valueStyle;
+  late final pw.TextStyle _valueBoldStyle;
+  late final pw.TextStyle _titleStyle;
 
   pw.Widget _box(
       {required pw.Widget child,
@@ -359,8 +387,7 @@ class DacteSefazPrinter {
                           drawText: false),
                     ),
                     pw.Text(data.chaveAcesso,
-                        style: pw.TextStyle(
-                            fontSize: 7, font: pw.Font.courierBold())),
+                        style: pw.TextStyle(fontSize: 7, font: fontBold)),
                   ],
                 ),
               ),

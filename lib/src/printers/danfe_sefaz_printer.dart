@@ -13,10 +13,41 @@ class DanfeSefazPrinter {
     locale: 'pt_BR',
   );
 
-  DanfeSefazPrinter(this.data);
+  final pw.Font? font;
+  final pw.Font? fontBold;
+
+  DanfeSefazPrinter(this.data, {this.font, this.fontBold}) {
+    _labelStyle = pw.TextStyle(
+      fontSize: 5,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+    _valueStyle = pw.TextStyle(
+      fontSize: 6.5,
+      font: font,
+      fontBold: fontBold,
+    );
+    _titleStyle = pw.TextStyle(
+      fontSize: 8,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+    _valueBoldStyle = pw.TextStyle(
+      fontSize: 6.5,
+      fontWeight: pw.FontWeight.bold,
+      font: font,
+      fontBold: fontBold,
+    );
+  }
 
   Future<Uint8List> generate() async {
-    final pdf = pw.Document();
+    final pdf = pw.Document(
+      theme: (font != null || fontBold != null)
+          ? pw.ThemeData.withFont(base: font, bold: fontBold)
+          : null,
+    );
 
     pdf.addPage(
       pw.MultiPage(
@@ -52,19 +83,10 @@ class DanfeSefazPrinter {
   // ESTILOS E HELPERS
   // ============================
 
-  static final _labelStyle = pw.TextStyle(
-    fontSize: 5,
-    fontWeight: pw.FontWeight.bold,
-  );
-  static final _valueStyle = pw.TextStyle(fontSize: 6.5);
-  static final _titleStyle = pw.TextStyle(
-    fontSize: 8,
-    fontWeight: pw.FontWeight.bold,
-  );
-  static final _valueBoldStyle = pw.TextStyle(
-    fontSize: 6.5,
-    fontWeight: pw.FontWeight.bold,
-  );
+  late final pw.TextStyle _labelStyle;
+  late final pw.TextStyle _valueStyle;
+  late final pw.TextStyle _titleStyle;
+  late final pw.TextStyle _valueBoldStyle;
 
   pw.Widget _box({
     required pw.Widget child,
@@ -277,7 +299,7 @@ class DanfeSefazPrinter {
                     _label('CHAVE DE ACESSO'),
                     pw.Text(
                       data.chaveAcesso,
-                      style: pw.TextStyle(fontSize: 8, font: pw.Font.courier()),
+                      style: pw.TextStyle(fontSize: 8, font: font),
                     ),
                     pw.SizedBox(height: 4),
                     _value(
